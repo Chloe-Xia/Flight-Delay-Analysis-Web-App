@@ -1,0 +1,275 @@
+<!doctype html>
+<html lang="zxx">
+
+<head>
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <title>Aircraft Delay Rate Prediction</title>
+  <link rel="stylesheet" href="/static/css/style-starter.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+  <!--header-->
+  <header id="site-header" class="fixed-top">
+    <div class="container">
+      <nav class="navbar navbar-expand-lg stroke">
+        <h1><a class="navbar-brand mr-lg-5" href="/index/">Aircraft Delay Rate Prediction</a></h1>
+        <button class="navbar-toggler collapsed bg-gradient" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo02" aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon fa icon-expand fa-bars"></span>
+          <span class="navbar-toggler-icon fa icon-close fa-times"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
+          <ul class="navbar-nav mr-auto">
+            <li class="nav-item">
+              <a class="nav-link" href="/index/">Home </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/ranking/">Ranking</a>
+            </li>
+            <li class="nav-item active">
+              <a class="nav-link" href="/search/">Search</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/analysis/">Analysis</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/comment/">Comment section</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/favorite/">Favorite</a>
+            </li>
+          </ul>
+        </div>
+        <div class="mobile-position">
+          <nav class="navigation">
+            <div class="theme-switch-wrapper">
+              <label class="theme-switch" for="checkbox">
+                <input type="checkbox" id="checkbox">
+                <div class="mode-container">
+                  <i class="gg-sun"></i>
+                  <i class="gg-moon"></i>
+                </div>
+              </label>
+            </div>
+          </nav>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Search Section -->
+  <section class="search-section py-5">
+    <div class="container py-lg-5">
+      <h2 class="title">Search</h2>
+      <form action="{% url 'search' %}" method="post" class="search-form">
+        {% csrf_token %}
+        <div class="row">
+          <div class="col-md-6">
+            <select name="starting-point" class="form-control" style="height: 60px;">
+              <option value="">Search by starting point</option>
+              <option value="Beijing Daxing International Airport (PKX)">Beijing Daxing International Airport (PKX)</option>
+              <option value="Shanghai Hongqiao International Airport (SHA)">Shanghai Hongqiao International Airport (SHA)</option>
+              <option value="Guangzhou Baiyun International Airport (CAN)">Guangzhou Baiyun International Airport (CAN)</option>
+              <option value="Kunming Changshui International Airport (KMG)">Kunming Changshui International Airport (KMG)</option>
+              <option value="Chengdu Tianfu International Airport (CTU)">Chengdu Tianfu International Airport (CTU)</option>
+              <option value="Hangzhou Xiaoshan International Airport (HGH)">Hangzhou Xiaoshan International Airport (HGH)</option>
+            </select>
+          </div>
+          <div class="col-md-6">
+            <select name="destination" class="form-control" style="height: 60px;">
+              <option value="">Search by destination</option>
+              <option value="Beijing Daxing International Airport (PKX)">Beijing Daxing International Airport (PKX)</option>
+              <option value="Shanghai Hongqiao International Airport (SHA)">Shanghai Hongqiao International Airport (SHA)</option>
+              <option value="Guangzhou Baiyun International Airport (CAN)">Guangzhou Baiyun International Airport (CAN)</option>
+              <option value="Kunming Changshui International Airport (KMG)">Kunming Changshui International Airport (KMG)</option>
+              <option value="Chengdu Tianfu International Airport (CTU)">Chengdu Tianfu International Airport (CTU)</option>
+              <option value="Hangzhou Xiaoshan International Airport (HGH)">Hangzhou Xiaoshan International Airport (HGH)</option>
+            </select>
+          </div>
+          <div class="col-md-6 mt-3">
+            <input type="date" name="date" placeholder="Search by date" class="form-control" style="height: 60px;">
+          </div>
+          <div class="col-md-6 mt-3">
+            <input type="text" name="airplane-type" placeholder="Search by airplane type" class="form-control" style="height: 60px;">
+          </div>
+        </div>
+        <br>
+        <div class="mt-4">
+          <button type="submit" class="btn btn-primary">Search</button>
+        </div>
+      </form>
+
+      <!-- 显示天气数据 -->
+      {% if weather_data %}
+      {% for city, data in weather_data.items %}
+      <div class="mt-5">
+        <h3>{{ city }}的五天天气预报</h3>
+        <canvas id="weatherChart-{{ city }}"></canvas>
+        <ul>
+          {% for day in data %}
+          <li>{{ day.date }}: {{ day.description }} - 最低 {{ day.min_temp }}°C, 最高 {{ day.max_temp }}°C</li>
+          {% endfor %}
+        </ul>
+        <script>
+          const weatherData{{ city }} = {{ data|safe }};
+          const dates{{ city }} = weatherData{{ city }}.map(item => item.date);
+          const minTemps{{ city }} = weatherData{{ city }}.map(item => item.min_temp);
+          const maxTemps{{ city }} = weatherData{{ city }}.map(item => item.max_temp);
+          const descriptions{{ city }} = weatherData{{ city }}.map(item => item.description);
+
+          const ctx{{ city }} = document.getElementById('weatherChart-{{ city }}').getContext('2d');
+          const weatherChart{{ city }} = new Chart(ctx{{ city }}, {
+            type: 'line',
+            data: {
+              labels: dates{{ city }},
+              datasets: [{
+                  label: '最低温度 (°C)',
+                  data: minTemps{{ city }},
+                  borderColor: 'rgba(75, 192, 192, 1)',
+                  borderWidth: 1,
+                  fill: false
+                },
+                {
+                  label: '最高温度 (°C)',
+                  data: maxTemps{{ city }},
+                  borderColor: 'rgba(255, 99, 132, 1)',
+                  borderWidth: 1,
+                  fill: false
+                }
+              ]
+            },
+            options: {
+              scales: {
+                y: {
+                  beginAtZero: true
+                }
+              }
+            }
+          });
+        </script>
+      </div>
+      {% endfor %}
+      {% endif %}
+
+      <!-- 显示提交的数据 -->
+      {% if flights %}
+      <div class="mt-5">
+        <h3>Filtered Flights:</h3>
+        <table class="table">
+          <thead>
+            <tr>
+              <th>出发机场</th>
+              <th>到达机场</th>
+              <th>日期</th>
+              <th>航空公司</th>
+              <th>计划起飞</th>
+              <th>计划到达</th>
+              <th>航班号</th>
+              <th>延误率</th>
+              <th>操作</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for flight in flights %}
+            <tr>
+              <td>{{ flight.出发机场 }}</td>
+              <td>{{ flight.到达机场 }}</td>
+              <td>{{ flight.日期 }}</td>
+              <td>{{ flight.航空公司 }}</td>
+              <td>{{ flight.计划起飞 }}</td>
+              <td>{{ flight.计划到达 }}</td>
+              <td>{{ flight.航班号 }}</td>
+              <td>{{ flight.延误率 }}</td>
+              <td>
+                <form action="{% url 'add_to_favorite' %}" method="post" onsubmit="setFlightData(this, '{{ flight.航空公司 }}', '{{ flight.航班号 }}', '{{ flight.出发机场 }}', '{{ flight.到达机场 }}', '{{ flight.计划起飞 }}', '{{ flight.计划到达 }}', '{{ flight.日期 }}')">
+                  {% csrf_token %}
+                  <input type="hidden" name="flight_data" value="">
+                  <button type="submit" class="btn btn-primary">收藏</button>
+                </form>
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      {% endif %}
+
+      <!-- 显示延误率柱状图 -->
+        {% if flights %}
+    <section class="delay-rate-chart py-5">
+        <div class="container py-lg-5">
+            <h2 class="title">Flight Delay Rate Chart</h2>
+            <canvas id="delayRateChart"></canvas>
+        </div>
+    </section>
+{% endif %}
+
+      <script>
+        function setFlightData(form, airline, flightNumber, departureAirport, arrivalAirport, departureTime, arrivalTime, date) {
+          const flightData = {
+            '航空公司': airline,
+            '航班号': flightNumber,
+            '出发机场': departureAirport,
+            '到达机场': arrivalAirport,
+            '计划起飞': departureTime,
+            '计划到达': arrivalTime,
+            '日期': date
+          };
+          form.flight_data.value = JSON.stringify(flightData);
+        }
+      </script>
+         <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const ctx = document.getElementById('delayRateChart').getContext('2d');
+            const flightNumbers = JSON.parse('{{ flight_numbers|escapejs }}');
+            const delayRates = JSON.parse('{{ delay_rates_by_flight|escapejs }}');
+
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: flightNumbers,
+                    datasets: [{
+                        label: 'Delay Rate',
+                        data: delayRates,
+                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                        borderColor: 'rgba(75, 192, 192, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        });
+    </script>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <!-- footer content here -->
+  </footer>
+
+  <!-- Template JavaScript -->
+  <script src="/static/js/jquery-3.3.1.min.js"></script>
+  <script src="/static/js/theme-change.js"></script>
+  <script src="/static/js/bootstrap.min.js"></script>
+
+  <script>
+    $(function() {
+      $('.navbar-toggler').click(function() {
+        $('body').toggleClass('noscroll');
+      })
+    });
+  </script>
+
+</body>
+
+</html>

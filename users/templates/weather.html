@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>天气预报</title>
+  <link rel="stylesheet" href="/static/css/style-starter.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+</head>
+
+  <!--header-->
+  <header id="site-header" class="fixed-top">
+    <div class="container">
+      <nav class="navbar navbar-expand-lg stroke">
+        <h1><a class="navbar-brand mr-lg-5" href="/index/">Aircraft Delay Rate Prediction</a></h1>
+        <button class="navbar-toggler collapsed bg-gradient" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo02" aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon fa icon-expand fa-bars"></span>
+          <span class="navbar-toggler-icon fa icon-close fa-times"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
+          <ul class="navbar-nav mr-auto">
+            <li class="nav-item ">
+              <a class="nav-link" href="/index/">Home </a>
+            </li>
+
+
+            <li class="nav-item">
+              <a class="nav-link" href="/ranking/">Ranking</a>
+            </li>
+
+            <li class="nav-item">
+              <a class="nav-link" href="/search/">Search</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/analysis/">Analysis</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/comment/">Comment section</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/favorite/">Favorite <span class="sr-only">(current)</span></a>
+            </li>
+          </ul>
+        </div>
+        <div class="mobile-position">
+          <nav class="navigation">
+            <div class="theme-switch-wrapper">
+              <label class="theme-switch" for="checkbox">
+                <input type="checkbox" id="checkbox">
+                <div class="mode-container">
+                  <i class="gg-sun"></i>
+                  <i class="gg-moon"></i>
+                </div>
+              </label>
+            </div>
+          </nav>
+        </div>
+      </nav>
+    </div>
+  </header>
+<body>
+  <div class="container py-lg-5">
+    <h2 class="title">{{ city_name }} 的五天天气预报</h2>
+    <ul>
+      {% for day in weather_data %}
+      <li>{{ day.date }}: {{ day.description }} - 最低 {{ day.min_temp }}°C, 最高 {{ day.max_temp }}°C</li>
+      {% endfor %}
+    </ul>
+    <canvas id="weatherChart"></canvas>
+  </div>
+
+  <script>
+    const weatherData = {{ weather_data|safe }};
+    const dates = weatherData.map(item => item.date);
+    const minTemps = weatherData.map(item => item.min_temp);
+    const maxTemps = weatherData.map(item => item.max_temp);
+
+    const ctx = document.getElementById('weatherChart').getContext('2d');
+    new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: dates,
+        datasets: [{
+            label: '最低温度 (°C)',
+            data: minTemps,
+            borderColor: 'rgba(75, 192, 192, 1)',
+            borderWidth: 1,
+            fill: false
+          },
+          {
+            label: '最高温度 (°C)',
+            data: maxTemps,
+            borderColor: 'rgba(255, 99, 132, 1)',
+            borderWidth: 1,
+            fill: false
+          }
+        ]
+      },
+      options: {
+        scales: {
+          y: {
+            beginAtZero: true
+          }
+        }
+      }
+    });
+  </script>
+</body>
+
+</html>

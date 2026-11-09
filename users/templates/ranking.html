@@ -1,0 +1,146 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Flight Delay Rate Analysis</title>
+    <link rel="stylesheet" href="/static/css/style-starter.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!--header-->
+  <header id="site-header" class="fixed-top">
+    <div class="container">
+      <nav class="navbar navbar-expand-lg stroke">
+        <h1><a class="navbar-brand mr-lg-5" href="/index/">Aircraft Delay Rate Prediction</a></h1>
+        <button class="navbar-toggler collapsed bg-gradient" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo02" aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon fa icon-expand fa-bars"></span>
+          <span class="navbar-toggler-icon fa icon-close fa-times"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
+          <ul class="navbar-nav mr-auto">
+            <li class="nav-item">
+              <a class="nav-link" href="/index/">Home <span class="sr-only">(current)</span></a>
+            </li>
+
+
+            <li class="nav-item active">
+              <a class="nav-link" href="/ranking/">Ranking</a>
+            </li>
+
+            <li class="nav-item">
+              <a class="nav-link" href="/search/">Search</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/analysis/">Analysis</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/comment/">Comment section</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/favorite/">Favorite</a>
+            </li>
+          </ul>
+        </div>
+        <div class="mobile-position">
+          <nav class="navigation">
+            <div class="theme-switch-wrapper">
+              <label class="theme-switch" for="checkbox">
+                <input type="checkbox" id="checkbox">
+                <div class="mode-container">
+                  <i class="gg-sun"></i>
+                  <i class="gg-moon"></i>
+                </div>
+              </label>
+            </div>
+          </nav>
+        </div>
+      </nav>
+    </div>
+  </header>
+</head>
+
+<body>
+    <div class="container mt-5">
+        <h3>Delay Rate Ranking for Airlines:</h3>
+
+        <form method="post" action="/ranking/">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="top_n">Show Top N Airlines:</label>
+                <input type="number" class="form-control" id="top_n" name="top_n" min="1" max="20" value="{{ top_n|default:10 }}">
+            </div>
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+
+        {% if flights %}
+            <table class="table table-bordered mt-3">
+                <thead>
+                    <tr>
+                        <th>Ranking</th>
+                        <th>Airline</th>
+                        <th>Delay Rate (%)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for flight in flights %}
+                        <tr>
+                            <td>{{ flight.排名 }}</td>
+                            <td>{{ flight.航空公司 }}</td>
+                            <td>{{ flight.航空公司延误率|floatformat:2 }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+
+            <!-- 添加一个画布用于绘制柱状图 -->
+            <canvas id="delayRateChart" width="400" height="200"></canvas>
+
+            <script>
+                document.addEventListener('DOMContentLoaded', function() {
+                    // 获取航空公司名称和延误率
+                    var airlines = [];
+                    var delayRates = [];
+                    {% for flight in flights %}
+                        airlines.push('{{ flight.航空公司 }}');
+                        delayRates.push({{ flight.航空公司延误率 }});
+                    {% endfor %}
+
+                    // 获取画布元素
+                    var ctx = document.getElementById('delayRateChart').getContext('2d');
+
+                    // 创建柱状图
+                    var delayRateChart = new Chart(ctx, {
+                        type: 'bar',
+                        data: {
+                            labels: airlines,
+                            datasets: [{
+                                label: 'Delay Rate (%)',
+                                data: delayRates,
+                                backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                                borderColor: 'rgba(75, 192, 192, 1)',
+                                borderWidth: 1
+                            }]
+                        },
+                        options: {
+                            scales: {
+                                y: {
+                                    beginAtZero: true,
+                                    title: {
+                                        display: true,
+                                        text: 'Delay Rate (%)'
+                                    }
+                                }
+                            }
+                        }
+                    });
+                });
+            </script>
+        {% else %}
+            <p>No flight data available.</p>
+        {% endif %}
+    </div>
+</body>
+
+</html>

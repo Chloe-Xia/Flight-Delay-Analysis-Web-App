@@ -1,0 +1,163 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Flight Delay Rate Analysis</title>
+    <link rel="stylesheet" href="/static/css/style-starter.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+   <!--header-->
+  <header id="site-header" class="fixed-top">
+    <div class="container">
+      <nav class="navbar navbar-expand-lg stroke">
+        <h1><a class="navbar-brand mr-lg-5" href="/index/">Aircraft Delay Rate Prediction</a></h1>
+        <button class="navbar-toggler collapsed bg-gradient" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo02" aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon fa icon-expand fa-bars"></span>
+          <span class="navbar-toggler-icon fa icon-close fa-times"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
+          <ul class="navbar-nav mr-auto">
+            <li class="nav-item ">
+              <a class="nav-link" href="/index/">Home <span class="sr-only">(current)</span></a>
+            </li>
+
+
+            <li class="nav-item">
+              <a class="nav-link" href="/ranking/">Ranking</a>
+            </li>
+
+            <li class="nav-item">
+              <a class="nav-link" href="/search/">Search</a>
+            </li>
+            <li class="nav-item active">
+              <a class="nav-link" href="/analysis/">Analysis</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/comment/">Comment section</a>
+            </li>
+            <li class="nav-item ">
+              <a class="nav-link" href="/favorite/">Favorite</a>
+            </li>
+          </ul>
+        </div>
+        <div class="mobile-position">
+          <nav class="navigation">
+            <div class="theme-switch-wrapper">
+              <label class="theme-switch" for="checkbox">
+                <input type="checkbox" id="checkbox">
+                <div class="mode-container">
+                  <i class="gg-sun"></i>
+                  <i class="gg-moon"></i>
+                </div>
+              </label>
+            </div>
+          </nav>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+    <!-- Flight Delay Rate Analysis Section -->
+    <section class="flight-delay-analysis py-5">
+        <div class="container py-lg-5">
+            <h2 class="title">Flight delay rate analysis</h2>
+            <form action="/analysis/" method="post" class="delay-analysis-form">
+                {% csrf_token %}
+                <div class="row">
+                    <div class="col-md-6">
+                        <input type="text" name="airplane-type" placeholder="Airplane type" class="form-control">
+                    </div>
+                    <div class="col-md-6">
+                        <select name="airline" class="form-control">
+                            <option value="Beijing-Shanghai">Beijing-Shanghai</option>
+                            <option value="Beijing-Chengdu">Beijing-Chengdu</option>
+                            <option value="Beijing-Kunming">Beijing-Kunming</option>
+                            <option value="Beijing-Hangzhou">Beijing-Hangzhou</option>
+                            <option value="Beijing-Guangzhou">Beijing-Guangzhou</option>
+                            <option value="Shanghai- Beijing">Shanghai- Beijing</option>
+                            <option value="Shanghai-Chengdu">Shanghai-Chengdu</option>
+                            <option value="Shanghai-Kunming">Shanghai-Kunming</option>
+                            <option value="Shanghai-Hangzhou">Shanghai-Hangzhou</option>
+                            <option value="Shanghai-Guangzhou">Shanghai-Guangzhou</option>
+                            <option value="Chengdu-Beijing">Chengdu-Beijing</option>
+                            <option value="Chengdu-Shanghai">Chengdu-Shanghai</option>
+                            <option value="Chengdu-Kunming">Chengdu-Kunming</option>
+                            <option value="Chengdu-Hangzhou">Chengdu-Hangzhou</option>
+                            <option value="Chengdu-Guangzhou">Chengdu-Guangzhou</option>
+                            <option value="Kunming-Beijing">Kunming-Beijing</option>
+                            <option value="Kunming-Shanghai">Kunming-Shanghai</option>
+                            <option value="Kunming-Chengdu">Kunming-Chengdu</option>
+                            <option value="Kunming-Hangzhou">Kunming-Hangzhou</option>
+                            <option value="Kunming-Guangzhou">Kunming-Guangzhou</option>
+                            <option value="Hangzhou-Beijing">Hangzhou-Beijing</option>
+                            <option value="Hangzhou-Shanghai">Hangzhou-Shanghai</option>
+                            <option value="Hangzhou-Chengdu">Hangzhou-Chengdu</option>
+                            <option value="Hangzhou-Kunming">Hangzhou-Kunming</option>
+                            <option value="Hangzhou-Guangzhou">Hangzhou-Guangzhou</option>
+                            <option value="Guangzhou-Beijing">Guangzhou-Beijing</option>
+                            <option value="Guangzhou-Shanghai">Guangzhou-Shanghai</option>
+                            <option value="Guangzhou-Chengdu">Guangzhou-Chengdu</option>
+                            <option value="Guangzhou-Kunming">Guangzhou-Kunming</option>
+                            <option value="Guangzhou-Hangzhou">Guangzhou-Hangzhou</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="mt-4 text-center">
+                    <button type="submit" class="btn btn-primary">Yes</button>
+                </div>
+            </form>
+            <div class="mt-5">
+                <h3>Delay rate</h3>
+                <div class="delay-chart">
+                    <canvas id="delayRateChart"></canvas>
+                    <script>
+                        document.addEventListener('DOMContentLoaded', function () {
+                            const ctx = document.getElementById('delayRateChart').getContext('2d');
+                            const dates = JSON.parse('{{ dates|escapejs }}');
+                            const delayRates = JSON.parse('{{ delay_rates|escapejs }}');
+
+                            new Chart(ctx, {
+                                type: 'line',
+                                data: {
+                                    labels: dates,
+                                    datasets: [{
+                                        label: 'Delay Rate',
+                                        data: delayRates,
+                                        borderColor: 'rgba(75, 192, 192, 1)',
+                                        borderWidth: 1,
+                                        fill: false
+                                    }]
+                                },
+                                options: {
+                                    scales: {
+                                        y: {
+                                            beginAtZero: true
+                                        }
+                                    }
+                                }
+                            });
+                        });
+                    </script>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <!-- footer content here -->
+    </footer>
+
+    <!-- Template JavaScript -->
+    <script src="/static/js/jquery-3.3.1.min.js"></script>
+    <script src="/static/js/theme-change.js"></script>
+    <script src="/static/js/bootstrap.min.js"></script>
+</body>
+
+</html>

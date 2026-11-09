@@ -1,0 +1,282 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>My Favorite Airplanes</title>
+    <link rel="stylesheet" href="/static/css/style-starter.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
+    <style>
+        .chart-container {
+            display: flex;
+            justify-content: space-around; /* 水平分布 */
+            align-items: center; /* 垂直居中 */
+            height: 400px; /* 设置高度以垂直居中 */
+        }
+
+    </style>
+</head>
+<body>
+     <!--header-->
+  <header id="site-header" class="fixed-top">
+    <div class="container">
+      <nav class="navbar navbar-expand-lg stroke">
+        <h1><a class="navbar-brand mr-lg-5" href="/index/">Aircraft Delay Rate Prediction</a></h1>
+        <button class="navbar-toggler collapsed bg-gradient" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo02" aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon fa icon-expand fa-bars"></span>
+          <span class="navbar-toggler-icon fa icon-close fa-times"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
+          <ul class="navbar-nav mr-auto">
+            <li class="nav-item ">
+              <a class="nav-link" href="/index/">Home <span class="sr-only">(current)</span></a>
+            </li>
+
+
+            <li class="nav-item">
+              <a class="nav-link" href="/ranking/">Ranking</a>
+            </li>
+
+            <li class="nav-item">
+              <a class="nav-link" href="/search/">Search</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/analysis/">Analysis</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/comment/">Comment section</a>
+            </li>
+            <li class="nav-item active">
+              <a class="nav-link" href="/favorite/">Favorite</a>
+            </li>
+          </ul>
+        </div>
+        <div class="mobile-position">
+          <nav class="navigation">
+            <div class="theme-switch-wrapper">
+              <label class="theme-switch" for="checkbox">
+                <input type="checkbox" id="checkbox">
+                <div class="mode-container">
+                  <i class="gg-sun"></i>
+                  <i class="gg-moon"></i>
+                </div>
+              </label>
+            </div>
+          </nav>
+        </div>
+      </nav>
+    </div>
+  </header>
+  <!-- //header -->
+
+    <!-- My Favorite Section -->
+    <section class="my-favorite py-5">
+        <div class="container py-lg-5">
+            <h2 class="title">My Favorite</h2>
+            <h3 class="subtitle">Favorite airplane:</h3>
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>出发机场</th>
+                        <th>到达机场</th>
+                        <th>日期</th>
+                        <th>航空公司</th>
+                        <th>计划起飞</th>
+                        <th>计划到达</th>
+                        <th>航班号</th>
+                        <th>操作</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for flight in favorite_flights %}
+                    <tr>
+                        <td>{{ flight.出发机场 }}</td>
+                        <td>{{ flight.到达机场 }}</td>
+                        <td>{{ flight.日期 }}</td>
+                        <td>{{ flight.航空公司 }}</td>
+                        <td>{{ flight.计划起飞 }}</td>
+                        <td>{{ flight.计划到达 }}</td>
+                        <td>{{ flight.航班号 }}</td>
+                        <td>
+                            <form action="{% url 'remove_from_favorite' %}" method="post">
+                                {% csrf_token %}
+                                <input type="hidden" name="flight_id" value="{{ forloop.counter0 }}">
+                                <button type="submit" class="btn btn-danger">删除</button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            <div class="chart-container">
+                <canvas id="airlineShareChart"></canvas>
+                <canvas id="airportShareChart"></canvas>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <!-- footer content here -->
+    </footer>
+
+    <!-- Template JavaScript -->
+    <script src="/static/js/jquery-3.3.1.min.js"></script>
+    <script src="/static/js/theme-change.js"></script>
+    <script src="/static/js/bootstrap.min.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            // 饼状图1：航空公司占比
+            const ctxAirline = document.getElementById('airlineShareChart').getContext('2d');
+            const airlineLabels = {{ airline_labels | safe }};
+            const airlineSizes = {{ airline_sizes | safe }};
+            const totalAirline = airlineSizes.reduce((acc, val) => acc + val, 0); // 计算总数
+            const percentagesAirline = airlineSizes.map(size => ((size / totalAirline) * 100).toFixed(2)); // 计算百分比
+
+            const chartAirline = new Chart(ctxAirline, {
+                type: 'pie',
+                data: {
+                    labels: airlineLabels,
+                    datasets: [{
+                        data: airlineSizes,
+                        backgroundColor: [
+                            'rgba(255, 99, 132, 0.2)',
+                            'rgba(54, 162, 235, 0.2)',
+                            'rgba(255, 206, 86, 0.2)',
+                            'rgba(75, 192, 192, 0.2)',
+                            'rgba(153, 102, 255, 0.2)',
+                            'rgba(255, 159, 64, 0.2)',
+                            'rgba(199, 199, 199, 0.2)',
+                            'rgba(83, 102, 255, 0.2)',
+                            'rgba(99, 255, 132, 0.2)',
+                            'rgba(192, 75, 75, 0.2)'
+                        ],
+                        borderColor: [
+                            'rgba(255, 99, 132, 1)',
+                            'rgba(54, 162, 235, 1)',
+                            'rgba(255, 206, 86, 1)',
+                            'rgba(75, 192, 192, 1)',
+                            'rgba(153, 102, 255, 1)',
+                            'rgba(255, 159, 64, 1)',
+                            'rgba(199, 199, 199, 1)',
+                            'rgba(83, 102, 255, 1)',
+                            'rgba(99, 255, 132, 1)',
+                            'rgba(192, 75, 75, 1)'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'right', // 将标签移到图的侧边
+                            labels: {
+                                font: {
+                                    size: 14 // 设置标签的字体大小
+                                }
+                            }
+                        },
+                        title: {
+                            display: true,
+                            text: 'Favorite Airlines Share',
+                            font: {
+                                size: 18 // 设置标题的字体大小
+                            }
+                        },
+                        datalabels: {
+                            formatter: (value, ctx) => {
+                                const index = ctx.dataIndex;
+                                const percentage = percentagesAirline[index];
+                                return `${percentage}%`;
+                            },
+                            color: '#000',
+                            font: {
+                                size: 14
+                            }
+                        }
+                    }
+                },
+                plugins: [ChartDataLabels]
+            });
+
+            // 饼状图2：到达机场占比
+            const ctxAirport = document.getElementById('airportShareChart').getContext('2d');
+            const airportLabels = {{ airport_labels | safe }};
+            const airportSizes = {{ airport_sizes | safe }};
+            const totalAirport = airportSizes.reduce((acc, val) => acc + val, 0); // 计算总数
+            const percentagesAirport = airportSizes.map(size => ((size / totalAirport) * 100).toFixed(2)); // 计算百分比
+
+            const chartAirport = new Chart(ctxAirport, {
+                type: 'pie',
+                data: {
+                    labels: airportLabels,
+                    datasets: [{
+                        data: airportSizes,
+                        backgroundColor: [
+                            'rgba(255, 99, 132, 0.2)',
+                            'rgba(54, 162, 235, 0.2)',
+                            'rgba(255, 206, 86, 0.2)',
+                            'rgba(75, 192, 192, 0.2)',
+                            'rgba(153, 102, 255, 0.2)',
+                            'rgba(255, 159, 64, 0.2)',
+                            'rgba(199, 199, 199, 0.2)',
+                            'rgba(83, 102, 255, 0.2)',
+                            'rgba(99, 255, 132, 0.2)',
+                            'rgba(192, 75, 75, 0.2)'
+                        ],
+                        borderColor: [
+                            'rgba(255, 99, 132, 1)',
+                            'rgba(54, 162, 235, 1)',
+                            'rgba(255, 206, 86, 1)',
+                            'rgba(75, 192, 192, 1)',
+                            'rgba(153, 102, 255, 1)',
+                            'rgba(255, 159, 64, 1)',
+                            'rgba(199, 199, 199, 1)',
+                            'rgba(83, 102, 255, 1)',
+                            'rgba(99, 255, 132, 1)',
+                            'rgba(192, 75, 75, 1)'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'right', // 将标签移到图的侧边
+                            labels: {
+                                font: {
+                                    size: 14 // 设置标签的字体大小
+                                }
+                            }
+                        },
+                        title: {
+                            display: true,
+                            text: 'Favorite Airports Share',
+                            font: {
+                                size: 18 // 设置标题的字体大小
+                            }
+                        },
+                        datalabels: {
+                            formatter: (value, ctx) => {
+                                const index = ctx.dataIndex;
+                                const percentage = percentagesAirport[index];
+                                return `${percentage}%`;
+                            },
+                            color: '#000',
+                            font: {
+                                size: 14
+                            }
+                        }
+                    }
+                },
+                plugins: [ChartDataLabels]
+            });
+        });
+    </script>
+</body>
+</html>

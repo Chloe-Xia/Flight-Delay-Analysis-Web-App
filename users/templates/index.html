@@ -1,0 +1,511 @@
+<!doctype html>
+<html lang="zxx">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <title>Aircraft Delay Rate Prediction</title>
+  <link rel="stylesheet" href="/static/css/style-starter.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+  <!--header-->
+  <header id="site-header" class="fixed-top">
+    <div class="container">
+      <nav class="navbar navbar-expand-lg stroke">
+        <h1><a class="navbar-brand mr-lg-5" href="/index/">Aircraft Delay Rate Prediction</a></h1>
+        <button class="navbar-toggler collapsed bg-gradient" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo02" aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon fa icon-expand fa-bars"></span>
+          <span class="navbar-toggler-icon fa icon-close fa-times"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
+          <ul class="navbar-nav mr-auto">
+            <li class="nav-item active">
+              <a class="nav-link" href="/index/">Home </a>
+            </li>
+
+
+            <li class="nav-item">
+              <a class="nav-link" href="/ranking/">Ranking</a>
+            </li>
+
+            <li class="nav-item">
+              <a class="nav-link" href="/search/">Search</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/analysis/">Analysis</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/comment/">Comment section</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/favorite/">Favorite</a>
+            </li>
+          </ul>
+        </div>
+        <div class="mobile-position">
+          <nav class="navigation">
+            <div class="theme-switch-wrapper">
+              <label class="theme-switch" for="checkbox">
+                <input type="checkbox" id="checkbox">
+                <div class="mode-container">
+                  <i class="gg-sun"></i>
+                  <i class="gg-moon"></i>
+                </div>
+              </label>
+            </div>
+          </nav>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <section class="w3l-main-slider" id="home">
+    <div class="banner-content">
+      <div id="demo-1" data-zs-src='["/static/images/banner1.jpg", "/static/images/banner2.jpg","/static/images/banner3.jpg", "/static/images/banner4.jpg"]' data-zs-overlay="dots">
+        <div class="demo-inner-content">
+          <div class="container">
+            <div class="banner-infhny">
+              <h3>You don't need to go far to find what matters.</h3>
+              <h6 class="mb-3">Discover your next trip</h6>
+              <div class="flex-wrap search-wthree-field mt-md-5 mt-4">
+                <form action="#" method="post" class="booking-form">
+                  <div class="row book-form">
+                    <div class="bottom-btn col-md-4 mt-md-0 mt-3">
+                      <br><a class="btn btn-style btn-secondary" href="/search/"><span class="fa fa-search mr-3" aria-hidden="true"></span> Search</a>
+                    </div>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="w3l-grids-3 py-5">
+    <div class="container py-md-5">
+      <div class="title-content text-left mb-lg-5 mb-4">
+        <h6 class="sub-title">Visit</h6>
+        <h3 class="hny-title">Popular Destinations</h3>
+      </div>
+      <div class="row bottom-ab-grids">
+        <div class="col-lg-6 subject-card mt-lg-0 mt-4">
+          <div class="subject-card-header p-4">
+            <a href="#" class="card_title p-lg-4d-block" onclick="getWeather(event, 'Beijing')">
+              <div class="row align-items-center">
+                <div class="col-sm-5 subject-img">
+                  <img src="/static/images/bj.jpg" class="img-fluid" alt="">
+                </div>
+                <div class="col-sm-7 subject-content mt-sm-0 mt-4">
+                  <h4>Beijing</h4>
+                  <div class="dst-btm">
+                    <h6 class=""> Start From </h6>
+                  </div>
+                </div>
+              </div>
+            </a>
+          </div>
+        </div>
+        <div class="col-lg-6 subject-card mt-lg-0 mt-4">
+          <div class="subject-card-header p-4">
+            <a href="#" class="card_title p-lg-4d-block" onclick="getWeather(event, 'Shanghai')">
+              <div class="row align-items-center">
+                <div class="col-sm-5 subject-img">
+                  <img src="/static/images/sh.jpg" class="img-fluid" alt="">
+                </div>
+                <div class="col-sm-7 subject-content mt-sm-0 mt-4">
+                  <h4>Shanghai</h4>
+                  <div class="dst-btm">
+                    <h6 class=""> Start From </h6>
+                  </div>
+                </div>
+              </div>
+            </a>
+          </div>
+        </div>
+        <div class="col-lg-6 subject-card mt-4">
+          <div class="subject-card-header p-4">
+            <a href="#" class="card_title p-lg-4d-block" onclick="getWeather(event, 'Guangzhou')">
+              <div class="row align-items-center">
+                <div class="col-sm-5 subject-img">
+                  <img src="/static/images/gz.jpg" class="img-fluid" alt="">
+                </div>
+                <div class="col-sm-7 subject-content mt-sm-0 mt-4">
+                  <h4>Guangzhou</h4>
+                  <div class="dst-btm">
+                    <h6 class=""> Start From </h6>
+                  </div>
+                </div>
+              </div>
+            </a>
+          </div>
+        </div>
+        <div class="col-lg-6 subject-card mt-4">
+          <div class="subject-card-header p-4">
+            <a href="#" class="card_title p-lg-4d-block" onclick="getWeather(event, 'Kunming')">
+              <div class="row align-items-center">
+                <div class="col-sm-5 subject-img">
+                  <img src="/static/images/km.jpg" class="img-fluid" alt="">
+                </div>
+                <div class="col-sm-7 subject-content mt-sm-0 mt-4">
+                  <h4>Kunming</h4>
+                  <div class="dst-btm">
+                    <h6 class=""> Start From </h6>
+                  </div>
+                </div>
+              </div>
+            </a>
+          </div>
+        </div>
+        <div class="col-lg-6 subject-card mt-4">
+          <div class="subject-card-header p-4">
+            <a href="#" class="card_title p-lg-4d-block" onclick="getWeather(event, 'Chengdu')">
+              <div class="row align-items-center">
+                <div class="col-sm-5 subject-img">
+                  <img src="/static/images/cd.jpg" class="img-fluid" alt="">
+                </div>
+                <div class="col-sm-7 subject-content mt-sm-0 mt-4">
+                  <h4>Chengdu</h4>
+                  <div class="dst-btm">
+                    <h6 class=""> Start From </h6>
+                  </div>
+                </div>
+              </div>
+            </a>
+          </div>
+        </div>
+        <div class="col-lg-6 subject-card mt-4">
+          <div class="subject-card-header p-4">
+            <a href="#" class="card_title p-lg-4d-block" onclick="getWeather(event, 'Hangzhou')">
+              <div class="row align-items-center">
+                <div class="col-sm-5 subject-img">
+                  <img src="/static/images/hz.jpg" class="img-fluid" alt="">
+                </div>
+                <div class="col-sm-7 subject-content mt-sm-0 mt-4">
+                  <h4>Hangzhou</h4>
+                  <div class="dst-btm">
+                    <h6 class=""> Start From </h6>
+                  </div>
+                </div>
+              </div>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <script>
+    function getWeather(event, cityName) {
+      event.preventDefault();
+      window.location.href = `/weather/${cityName}/`;
+    }
+  </script>
+
+  <!--/-->
+  <div class="best-rooms py-5">
+    <div class="container py-md-5">
+        <div class="ban-content-inf row">
+            <div class="maghny-gd-1 col-lg-6">
+              <div class="maghny-grid">
+                <figure class="effect-lily border-radius  m-0">
+                    <img class="img-fluid" src="/static/images/p2.jpg" alt="" />
+                </figure>
+            </div>
+            </div>
+            <div class="maghny-gd-1 col-lg-6 mt-lg-0 mt-4">
+                <div class="row">
+                    <div class="maghny-gd-1 col-6">
+                        <div class="maghny-grid">
+                            <figure class="effect-lily border-radius">
+                                <img class="img-fluid" src="/static/images/p1.jpg" alt="" />
+                            </figure>
+                        </div>
+                    </div>
+                    <div class="maghny-gd-1 col-6">
+                        <div class="maghny-grid">
+                            <figure class="effect-lily border-radius">
+                                <img class="img-fluid" src="/static/images/p3.jpg" alt="" />
+                            </figure>
+                        </div>
+                    </div>
+                    <div class="maghny-gd-1 col-6 mt-4">
+                        <div class="maghny-grid">
+                            <figure class="effect-lily border-radius">
+                                <img class="img-fluid" src="/static/images/p4.jpg" alt="" />
+                            </figure>
+                        </div>
+                    </div>
+                    <div class="maghny-gd-1 col-6 mt-4">
+                        <div class="maghny-grid">
+                            <figure class="effect-lily border-radius">
+                                <img class="img-fluid" src="/static/images/p5.jpg" alt="" />
+                            </figure>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+  <!-- //stats -->
+  <!--/w3l-bottom-->
+  <section class="w3l-bottom py-5">
+    <div class="container py-md-4 py-3 text-center">
+      <div class="row my-lg-4 mt-4">
+        <div class="col-lg-9 col-md-10 ml-auto">
+          <div class="bottom-info ml-auto">
+            <div class="header-section text-left">
+              <h3 class="hny-title two">Traveling makes a man wiser, but less happy.</h3>
+              <p class="mt-3 pr-lg-5">10:30 at the Airport--David Tao</p>
+            </div>
+
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <!--//w3l-bottom-->
+  <!-- testimonials -->
+  <section class="w3l-clients" id="clients">
+    <!-- /grids -->
+    <div class="cusrtomer-layout py-5">
+      <div class="container py-lg-4 py-md-3 pb-lg-0">
+        <div class="heading text-center mx-auto">
+          <h6 class="sub-title text-center">Here’s what they have to say</h6>
+          <h3 class="hny-title mb-md-5 mb-4">our partners do the talking</h3>
+        </div>
+        <!-- /grids -->
+        <div class="testimonial-width">
+          <div id="owl-demo1" class="owl-two owl-carousel owl-theme">
+            <div class="item">
+              <div class="testimonial-content">
+                <div class="testimonial">
+                  <blockquote>
+                    <span class="fa fa-quote-left" aria-hidden="true"></span>
+                    Life is a wilderness, not a track
+                  </blockquote>
+                  <div class="testi-des">
+                    <div class="test-img"><img src="/static/images/c2.jpg" class="img-fluid" alt="client-img">
+                    </div>
+                    <div class="peopl align-self">
+                      <h3>Ikun Mai</h3>
+                      <p class="indentity">Example City</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="item">
+              <div class="testimonial-content">
+                <div class="testimonial">
+                  <blockquote>
+                    <span class="fa fa-quote-left" aria-hidden="true"></span>
+                    Oh! I have slipped the surly bonds of Earth.And danced the skies on laughter-silvered wings;
+                    Sunward I've climbed, and joined the tumbling mirth Of sun-split clouds, and done a hundred things.
+                    You have not dreamed of wheeled and soared and swung
+                  </blockquote>
+                  <div class="testi-des">
+                    <div class="test-img"><img src="/static/images/c1.jpg" class="img-fluid" alt="client-img">
+                    </div>
+                    <div class="peopl align-self">
+                      <h3>Jacky</h3>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="item">
+              <div class="testimonial-content">
+                <div class="testimonial">
+                  <blockquote>
+                    <span class="fa fa-quote-left" aria-hidden="true"></span>
+                    This is too dangerous for you, you can't land, it's out of hand
+                  </blockquote>
+                  <div class="testi-des">
+                    <div class="test-img"><img src="/static/images/c6.jpg" class="img-fluid" alt="client-img">
+                    </div>
+                    <div class="peopl align-self">
+                      <h3>Sea</h3>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="item">
+              <div class="testimonial-content">
+                <div class="testimonial">
+                  <blockquote>
+                    <span class="fa fa-quote-left" aria-hidden="true"></span>
+                    Reading ten thousand books is not as useful as traveling ten thousand miles
+                  </blockquote>
+                  <div class="testi-des">
+                    <div class="test-img"><img src="/static/images/c3.jpg" class="img-fluid" alt="client-img">
+                    </div>
+                    <div class="peopl align-self">
+                      <h3>Wang jiahui</h3>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="item">
+              <div class="testimonial-content">
+                <div class="testimonial">
+                  <blockquote>
+                    <span class="fa fa-quote-left" aria-hidden="true"></span>
+                    The unanswered call signal gets lost in the clouds
+                  </blockquote>
+                  <div class="testi-des">
+                    <div class="test-img"><img src="/static/images/c4.jpg" class="img-fluid" alt="client-img">
+                    </div>
+                    <div class="peopl align-self">
+                      <h3>Chloe</h3>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="item">
+              <div class="testimonial-content">
+                <div class="testimonial">
+                  <blockquote>
+                    <span class="fa fa-quote-left" aria-hidden="true"></span>
+                    Not accepting disciples
+                  </blockquote>
+                  <div class="testi-des">
+                    <div class="test-img"><img src="/static/images/c5.jpg" class="img-fluid" alt="client-img">
+                    </div>
+                    <div class="peopl align-self">
+                      <h3>Cecilia</h3>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+
+          </div>
+        </div>
+      </div>
+      <!-- /grids -->
+    </div>
+    <!-- //grids -->
+  </section>
+  <!-- //testimonials -->
+  <footer>
+    <section class="w3l-footer">
+      <div class="w3l-footer-16-main py-5">
+        <div class="container">
+          <div class="row">
+            <div class="col-lg-6 column">
+              <div class="row">
+                <div class="col-md-4 column">
+                  <h3>Our Services</h3>
+                  <ul class="footer-gd-16">
+                    <li><a href="/index/">Home</a></li>
+                    <li><a href="/search/">Search</a></li>
+                    <li><a href="/analysis/">Analysis</a></li>
+                    <li><a href="/comment/">Comment section</a></li>
+                    <li><a href="/favorite/">Favorite</a></li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <button onclick="topFunction()" id="movetop" title="Go to top">
+        <span class="fa fa-angle-up"></span>
+      </button>
+      <script>
+        window.onscroll = function () {
+          scrollFunction()
+        };
+
+        function scrollFunction() {
+          if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+            document.getElementById("movetop").style.display = "block";
+          } else {
+            document.getElementById("movetop").style.display = "none";
+          }
+        }
+
+        function topFunction() {
+          document.body.scrollTop = 0;
+          document.documentElement.scrollTop = 0;
+        }
+      </script>
+    </section>
+  </footer>
+
+  <script src="/static/js/jquery-3.3.1.min.js"></script>
+  <script src="/static/js/theme-change.js"></script>
+  <script src="/static/js/bootstrap.min.js"></script>
+  <script src="/static/js/jquery.min.js"></script>
+  <script src="/static/js/modernizr-2.6.2.min.js"></script>
+  <script src="/static/js/jquery.zoomslider.min.js"></script>
+  <script src="/static/js/owl.carousel.js"></script>
+  <script>
+    $(document).ready(function () {
+      $("#owl-demo1").owlCarousel({
+        loop: true,
+        margin: 20,
+        nav: false,
+        responsiveClass: true,
+        responsive: {
+          0: {
+            items: 1,
+            nav: false
+          },
+          736: {
+            items: 1,
+            nav: false
+          },
+          1000: {
+            items: 1,
+            nav: false,
+            loop: true
+          }
+        }
+      })
+    })
+  </script>
+  <script src="/static/js/jquery.waypoints.min.js"></script>
+  <script src="/static/js/jquery.countup.js"></script>
+  <script>
+    $('.counter').countUp();
+  </script>
+  <script>
+    $(window).on("scroll", function () {
+      var scroll = $(window).scrollTop();
+
+      if (scroll >= 80) {
+        $("#site-header").addClass("nav-fixed");
+      } else {
+        $("#site-header").removeClass("nav-fixed");
+      }
+    });
+
+    $(".navbar-toggler").on("click", function () {
+      $("header").toggleClass("active");
+    });
+    $(document).on("ready", function () {
+      if ($(window).width() > 991) {
+        $("header").removeClass("active");
+      }
+      $(window).on("resize", function () {
+        if ($(window).width() > 991) {
+          $("header").removeClass("active");
+        }
+      });
+    });
+  </script>
+</body>
+
+</html>
